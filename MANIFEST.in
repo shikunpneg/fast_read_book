@@ -1,0 +1,30 @@
+include README.md
+include LICENSE
+include CHANGELOG.md
+include DEPLOY.md
+include requirements.txt
+include prompt.json
+include mkdocs.yml
+
+recursive-include docs *.md
+recursive-include scripts *.py
+recursive-include scripts *.js
+
+# 不打包的（GitHub Pages / 第三方）
+exclude _test_*
+exclude .github
+exclude site
+exclude dist
+exclude build
+exclude *.egg-info
+exclude *.pyc
+exclude __pycache__
+exclude .pytest_cache
+prune _test_*
+prune .github
+prune site
+prune dist
+prune build
+prune *.egg-info
+prune __pycache__
+prune .pytest_cache

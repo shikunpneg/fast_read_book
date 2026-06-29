@@ -13,6 +13,9 @@ htmlcov/
 kg_book_tool.egg-info/
 _verify/
 
+# mkdocs 文档站点（构建产物）
+site/
+
 # 虚拟环境
 venv/
 .venv/
