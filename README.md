@@ -19,9 +19,10 @@
 - 📖 **参考文献识别** — 自动将"参考文献"小节的编号条目（如 `[1] Singhal`）提取为实体
 - 🌐 **桌面应用** — Tkinter 原生 GUI（双击启动）
 - 🎯 **三视图阅读器** — 实体列表、思维导图、原文对照
-![alt text](ltp\scripts\image\主页.png)
-![alt text](ltp\scripts\image\思维导图生成.png)
-![alt text](ltp\scripts\image\文本定位.png)
+![alt text](scripts/image/主页.png)
+![alt text](scripts/image/思维导图生成.png)
+![alt text](scripts/image/文本定位.png)
+![alt text](scripts/image/知识点解释.png)
 
 ## 📦 安装
 
