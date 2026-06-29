@@ -1,4 +1,4 @@
-# kg-book-tool
+# fast-read-book
 
 > 将电子书（PDF / EPUB / DOCX / PPTX / XLSX / HTML / Markdown / 图片）自动转换为**交互式知识图谱**。
 
@@ -6,14 +6,22 @@
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
+
 ## ✨ 特性
 
 - 📚 **多格式支持** — PDF / EPUB / DOCX / PPTX / XLSX / HTML / Markdown / TXT
+- **可以一键生成各个章节的实体思维导图，便于快速了解全书内容和结构**
+- **交互性体现在可点击的思维导图实体和原文档定位，方便了用户快速导航**
+- **支持 LLM 摘要，为每个实体生成摘要，方便用户快速了解**
+- **除了思维导图功能还有论证分析和叙事分析的发展线可视化，可以添加笔记**
 - 🖼️ **OCR 回退** — 自动检测图像型 PDF 并调用 EasyOCR（中文支持）
 - 🔤 **编码自动检测** — UTF-8 / GBK / GB2312 / GB18030 / Big5 / Latin-1
 - 📖 **参考文献识别** — 自动将"参考文献"小节的编号条目（如 `[1] Singhal`）提取为实体
 - 🌐 **桌面应用** — Tkinter 原生 GUI（双击启动）
 - 🎯 **三视图阅读器** — 实体列表、思维导图、原文对照
+![alt text](ltp\scripts\image\主页.png)
+![alt text](ltp\scripts\image\思维导图生成.png)
+![alt text](ltp\scripts\image\文本定位.png)
 
 ## 📦 安装
 
@@ -164,6 +172,9 @@ MIT License — 详见 [LICENSE](LICENSE)
 
 ## 🔗 链接
 
-- PyPI: <https://pypi.org/project/kg-book-tool/>
-- 源代码: <https://github.com/shikunpneg/kg-book-tool>
-- 问题反馈: <https://github.com/shikunpneg/kg-book-tool/issues>
+- 📦 PyPI: <https://pypi.org/project/kg-book-tool/>
+- 🐙 GitHub: <https://github.com/shikunpneg/fast_read_book>
+- 📖 文档: <https://shikunpneg.github.io/fast_read_book/>
+- 🐛 Issues: <https://github.com/shikunpneg/fast_read_book/issues>
+- 📜 更新日志: [CHANGELOG.md](CHANGELOG.md)
+- 🚀 部署: [DEPLOY.md](DEPLOY.md)
