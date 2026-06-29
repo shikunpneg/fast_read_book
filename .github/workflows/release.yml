@@ -59,6 +59,13 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - uses: actions/download-artifact@v4
         with:
           name: dist
@@ -69,6 +76,7 @@ jobs:
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
           python scripts/extract_changelog.py "$VERSION" > /tmp/notes.md
+          cat /tmp/notes.md
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
