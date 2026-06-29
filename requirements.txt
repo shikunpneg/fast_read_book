@@ -1,0 +1,28 @@
+# 知识图谱交互书 - Python 依赖
+# 核心
+PyMuPDF>=1.23.0          # PDF 文本提取
+ebooklib>=0.18           # EPUB 解析
+lxml>=4.9.0              # ebooklib 依赖
+
+# 文档格式
+python-docx>=1.0.0       # Word DOCX
+python-pptx>=0.6.21      # PowerPoint PPTX
+openpyxl>=3.1.0          # Excel XLSX
+beautifulsoup4>=4.12.0   # HTML 解析
+
+# OCR（图像型 PDF / 图片）
+easyocr>=1.7.0           # 离线 OCR（推荐）
+# paddleocr>=2.7.0       # 离线 OCR（更准但更重）
+# pytesseract>=0.3.10    # Tesseract OCR（需先装引擎）
+
+# Web 与服务
+Flask>=2.3.0
+waitress>=2.1.0          # 生产 WSGI
+requests>=2.31.0
+
+# 桌面 GUI
+# pywebview>=4.0.0       # 可选：嵌入式浏览器
+# tkinter                # 标准库，Python 自带
+
+# 文本处理
+chardet>=5.0.0           # 编码自动检测

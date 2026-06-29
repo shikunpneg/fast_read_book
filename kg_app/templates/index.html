@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>知识图谱交互书 - 首页</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+  background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+.container {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  padding: 48px;
+  max-width: 560px;
+  width: 90%;
+}
+h1 {
+  font-size: 28px;
+  color: #1a237e;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.subtitle {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 32px;
+}
+
+/* 上传区域 */
+.upload-zone {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-bottom: 24px;
+  position: relative;
+}
+.upload-zone:hover, .upload-zone.dragover {
+  border-color: #3f51b5;
+  background: #f5f6ff;
+}
+.upload-zone .icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+.upload-zone p {
+  color: #888;
+  font-size: 14px;
+}
+.upload-zone .file-name {
+  color: #1a237e;
+  font-weight: 600;
+  margin-top: 8px;
+  display: none;
+}
+#file-input { display: none; }
+
+/* 选项 */
+.options {
+  margin-bottom: 24px;
+}
+.option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.option-row:last-child { border-bottom: none; }
+.option-row label {
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.option-row .hint {
+  font-size: 11px;
+  color: #999;
+  display: block;
+}
+.option-row select {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fff;
+}
+
+/* 开关 */
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+}
+.toggle input { display: none; }
+.toggle .slider {
+  position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.toggle .slider::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 2px;
+  top: 2px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+.toggle input:checked + .slider {
+  background: #3f51b5;
+}
+.toggle input:checked + .slider::before {
+  transform: translateX(20px);
+}
+
+/* 按钮 */
+.btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-primary {
+  background: #1a237e;
+  color: #fff;
+}
+.btn-primary:hover { background: #283593; }
+.btn-primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* 进度 */
+.progress-section {
+  display: none;
+  margin-top: 24px;
+}
+.progress-bar {
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3f51b5, #1a237e);
+  border-radius: 4px;
+  transition: width 0.5s;
+  width: 0%;
+}
+.progress-text {
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+}
+
+/* 结果 */
+.result-section {
+  display: none;
+  margin-top: 24px;
+  padding: 20px;
+  background: #f5f7ff;
+  border-radius: 8px;
+  text-align: center;
+}
+.result-section h3 {
+  color: #2e7d32;
+  margin-bottom: 12px;
+}
+.result-stats {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 16px;
+  line-height: 1.8;
+}
+.btn-success {
+  display: inline-block;
+  padding: 10px 32px;
+  background: #2e7d32;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: 0.3s;
+}
+.btn-success:hover { background: #1b5e20; }
+
+.error-msg {
+  display: none;
+  margin-top: 16px;
+  padding: 12px;
+  background: #ffebee;
+  color: #c62828;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* 诊断 */
+.diag-section {
+  margin-top: 24px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  display: none;
+}
+.diag-section h3 {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.diag-group {
+  margin-bottom: 10px;
+}
+.diag-group-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 4px;
+}
+.diag-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  font-size: 12px;
+}
+.diag-icon { font-size: 14px; }
+.diag-icon.ok { color: #2e7d32; }
+.diag-icon.fail { color: #c62828; }
+.diag-summary {
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+.diag-summary.ok { background: #e8f5e9; color: #2e7d32; }
+.diag-summary.fail { background: #ffebee; color: #c62828; }
+.btn-diag {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: 0.2s;
+  color: #555;
+}
+.btn-diag:hover { background: #f0f0f0; }
+.btn-diag:disabled { opacity: 0.5; cursor: not-allowed; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>知识图谱交互书</h1>
+  <p class="subtitle">上传电子书，自动生成交互式知识图谱</p>
+
+  <!-- 上传区域 -->
+  <div class="upload-zone" id="upload-zone">
+    <div class="icon">📂</div>
+    <p>点击或拖拽上传 PDF / EPUB / TXT 文件</p>
+    <p style="font-size:11px;color:#bbb;margin-top:4px;">支持格式: .pdf, .epub, .txt (最大 50MB)</p>
+    <div class="file-name" id="file-name"></div>
+  </div>
+  <input type="file" id="file-input" accept=".pdf,.epub,.txt">
+
+  <!-- 选项 -->
+  <div class="options">
+    <div class="option-row">
+      <div>
+        <label>生成 AI 通俗理解</label>
+        <span class="hint">使用 Ollama 本地 LLM 为实体生成摘要（耗时较长）</span>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="opt-summary">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="option-row">
+      <div>
+        <label>LLM 模型</label>
+        <span class="hint">需要在 Ollama 中已安装的模型</span>
+      </div>
+      <select id="opt-model">
+        <option value="qwen2.5:3b">qwen2.5:3b</option>
+        <option value="qwen2.5:7b">qwen2.5:7b</option>
+        <option value="llama3">llama3</option>
+        <option value="deepseek-r1:7b">deepseek-r1:7b</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 构建按钮 -->
+  <button class="btn btn-primary" id="btn-build" disabled>
+    <span>开始构建知识图谱</span>
+  </button>
+
+  <!-- 进度 -->
+  <div class="progress-section" id="progress-section">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="progress-text" id="progress-text">准备中...</div>
+  </div>
+
+  <!-- 错误 -->
+  <div class="error-msg" id="error-msg"></div>
+
+  <!-- 结果 -->
+  <div class="result-section" id="result-section">
+    <h3>构建完成!</h3>
+    <div class="result-stats" id="result-stats"></div>
+    <a class="btn-success" id="btn-reader" href="#">进入阅读</a>
+  </div>
+
+  <!-- 系统诊断 -->
+  <button class="btn-diag" id="btn-diag" onclick="runDiag()">🔍 系统诊断检查</button>
+  <div class="diag-section" id="diag-section">
+    <h3>系统诊断结果</h3>
+    <div id="diag-results"></div>
+    <div id="diag-summary"></div>
+  </div>
+</div>
+
+<script>
+// ===== 状态 =====
+let taskId = null;
+let pollingTimer = null;
+
+// ===== 上传区域 =====
+const uploadZone = document.getElementById('upload-zone');
+const fileInput = document.getElementById('file-input');
+const fileName = document.getElementById('file-name');
+const btnBuild = document.getElementById('btn-build');
+
+uploadZone.addEventListener('click', () => fileInput.click());
+
+uploadZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  uploadZone.classList.add('dragover');
+});
+uploadZone.addEventListener('dragleave', () => {
+  uploadZone.classList.remove('dragover');
+});
+uploadZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadZone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) handleFile(file);
+});
+
+fileInput.addEventListener('change', () => {
+  const file = fileInput.files[0];
+  if (file) handleFile(file);
+});
+
+async function handleFile(file) {
+  fileName.textContent = file.name;
+  fileName.style.display = 'block';
+  btnBuild.disabled = false;
+
+  // 上传文件
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const resp = await fetch('/api/upload', { method: 'POST', body: formData });
+    const data = await resp.json();
+    if (data.error) {
+      showError(data.error);
+      return;
+    }
+    taskId = data.task_id;
+    hideError();
+  } catch (e) {
+    showError('上传失败: ' + e.message);
+  }
+}
+
+// ===== 构建 =====
+btnBuild.addEventListener('click', startBuild);
+
+async function startBuild() {
+  if (!taskId) return;
+
+  btnBuild.disabled = true;
+  btnBuild.innerHTML = '<span>构建中...</span>';
+
+  const progressSection = document.getElementById('progress-section');
+  const resultSection = document.getElementById('result-section');
+  progressSection.style.display = 'block';
+  resultSection.style.display = 'none';
+  hideError();
+
+  const enableSummary = document.getElementById('opt-summary').checked;
+  const model = document.getElementById('opt-model').value;
+
+  try {
+    const resp = await fetch('/api/build', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ task_id: taskId, summary: enableSummary, model: model })
+    });
+    const data = await resp.json();
+    if (data.error) {
+      showError(data.error);
+      btnBuild.disabled = false;
+      btnBuild.innerHTML = '<span>开始构建知识图谱</span>';
+      return;
+    }
+    // 开始轮询状态
+    pollStatus();
+  } catch (e) {
+    showError('构建失败: ' + e.message);
+    btnBuild.disabled = false;
+    btnBuild.innerHTML = '<span>开始构建知识图谱</span>';
+  }
+}
+
+function pollStatus() {
+  if (pollingTimer) clearInterval(pollingTimer);
+
+  pollingTimer = setInterval(async () => {
+    try {
+      const resp = await fetch('/api/status/' + taskId);
+      const data = await resp.json();
+
+      document.getElementById('progress-fill').style.width = data.progress + '%';
+      document.getElementById('progress-text').textContent = data.message;
+
+      if (data.status === 'completed') {
+        clearInterval(pollingTimer);
+        onBuildComplete(data.result);
+      } else if (data.status === 'failed') {
+        clearInterval(pollingTimer);
+        showError(data.message);
+        btnBuild.disabled = false;
+        btnBuild.innerHTML = '<span>重试构建</span>';
+      }
+    } catch (e) {
+      // 忽略轮询错误
+    }
+  }, 1000);
+}
+
+function onBuildComplete(result) {
+  const resultSection = document.getElementById('result-section');
+  resultSection.style.display = 'block';
+
+  const stats = result.stats || {};
+  document.getElementById('result-stats').innerHTML =
+    `实体: ${stats.total_entities || '?'} | ` +
+    `关系: ${stats.total_relations || '?'} | ` +
+    `有摘要: ${stats.with_summary || '?'} | ` +
+    `有定义: ${stats.with_definition || '?'}`;
+
+  const btnReader = document.getElementById('btn-reader');
+  btnReader.href = `/reader?data=${result.data_file}`;
+}
+
+// ===== 工具函数 =====
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function hideError() {
+  document.getElementById('error-msg').style.display = 'none';
+}
+
+// ===== 系统诊断 =====
+async function runDiag() {
+  const btn = document.getElementById('btn-diag');
+  const section = document.getElementById('diag-section');
+  const resultsDiv = document.getElementById('diag-results');
+  const summaryDiv = document.getElementById('diag-summary');
+
+  btn.disabled = true;
+  btn.textContent = '诊断中...';
+  section.style.display = 'block';
+  resultsDiv.innerHTML = '<div style="text-align:center;color:#999;padding:20px;">正在检查系统状态...</div>';
+  summaryDiv.innerHTML = '';
+
+  try {
+    const resp = await fetch('/api/diag');
+    const data = await resp.json();
+
+    let html = '';
+    for (const group of data.results) {
+      html += `<div class="diag-group"><div class="diag-group-title">${group.name}</div>`;
+      for (const item of group.items) {
+        const icon = item.ok ? '<span class="diag-icon ok">✓</span>' : '<span class="diag-icon fail">✗</span>';
+        const detail = item.detail ? ` <span style="color:#999">${item.detail}</span>` : '';
+        html += `<div class="diag-item">${icon} ${item.label}${detail}</div>`;
+      }
+      html += '</div>';
+    }
+    resultsDiv.innerHTML = html;
+
+    if (data.ok) {
+      summaryDiv.innerHTML = '<div class="diag-summary ok">✓ 所有检查通过，系统状态正常</div>';
+    } else {
+      summaryDiv.innerHTML = '<div class="diag-summary fail">✗ 存在未通过项，请根据提示修复</div>';
+    }
+  } catch (e) {
+    resultsDiv.innerHTML = `<div style="color:#c62828;padding:10px;">诊断失败: ${e.message}</div>`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🔍 重新诊断';
+}
+</script>
+</body>
+</html>

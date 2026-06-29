@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>知识图谱 V7 - 思维导图版</title>
+  <link rel="stylesheet" href="/static/kg_v7.css?v=20260628">
+</head>
+<body>
+  <div id="app">
+    <!-- ===== 侧边栏 ===== -->
+    <div id="sidebar">
+      <div id="sidebar-header">
+        <h2>知识图谱实体</h2>
+        <div class="stats" id="stats">加载中...</div>
+      </div>
+
+      <div id="sidebar-tabs">
+        <button id="tab-list" class="active">实体列表</button>
+        <button id="tab-text">原文阅读</button>
+      </div>
+
+      <div id="search-box">
+        <input type="text" id="search-input" placeholder="搜索实体...">
+      </div>
+
+      <div id="entity-list"></div>
+      <div id="text-view"></div>
+    </div>
+
+    <!-- ===== 主区域 ===== -->
+    <div id="main-area">
+      <div id="main-header">
+        <span class="title">知识图谱 思维导图</span>
+        <span class="info">点击节点查看详情 · 右键/滚轮缩放平移</span>
+      </div>
+
+      <div id="markmap-container">
+        <div class="empty-state">
+          <span class="icon">🗺️</span>
+          <p>加载中...</p>
+        </div>
+      </div>
+
+      <!-- 工具栏 -->
+      <div id="toolbar">
+        <button id="btn-fit" title="适应窗口">⊡</button>
+        <button id="btn-zoom-in" title="放大">+</button>
+        <button id="btn-zoom-out" title="缩小">−</button>
+        <button id="btn-expand" title="全部展开">⊞</button>
+        <button id="btn-collapse" title="全部折叠">⊟</button>
+      </div>
+    </div>
+
+    <!-- ===== 详情面板遮罩 ===== -->
+    <div id="detail-overlay"></div>
+
+    <!-- ===== 详情面板 ===== -->
+    <div id="detail-panel">
+      <div class="dp-header">
+        <button class="dp-close" id="dp-close">✕</button>
+        <div class="dp-header-info">
+          <h3 id="dp-name">选择实体</h3>
+          <div class="dp-meta" id="dp-meta"></div>
+        </div>
+      </div>
+
+      <div class="dp-body"></div>
+
+      <div class="dp-note">
+        <h4>笔记</h4>
+        <textarea id="dp-note-text" placeholder="为此实体添加笔记..."></textarea>
+        <div style="margin-top:6px;display:flex;align-items:center;">
+          <button class="note-save" id="note-save-btn">保存笔记</button>
+          <span class="note-status" id="note-status"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 注入路径与书名（Flask 渲染） -->
+  <script>
+    // 注意：kg_v7.js 直接 fetch(MD_FILE)，必须用完整 URL（含 /static/uploads/ 前缀）
+    window.__DATA_FILE__ = "{{ data_file }}";
+    window.__MD_FILE__ = "/static/uploads/{{ text_file }}";
+    window.__BOOK_NAME__ = {{ BOOK_NAME | tojson }};
+    window.__BOOK_TITLE__ = {{ BOOK_TITLE | tojson }};
+  </script>
+
+  <!-- Markmap 库 -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.18.12/dist/browser/index.iife.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.min.js"></script>
+  <script>if(typeof window.markmap==='undefined'||typeof window.markmap.Markmap==='undefined'){console.error('[KG V7] markmap 库加载失败');document.getElementById('markmap-container').innerHTML='<div class="empty-state"><span class="icon">⚠️</span><p>markmap 库加载失败，请检查网络</p></div>';}</script>
+
+  <!-- 主逻辑 -->
+  <script src="/static/kg_v7.js?v=20260628"></script>
+
+  <!-- 数据加载脚本 -->
+  <script>
+    // 从 Flask API 加载实体数据
+    const dataFile = window.__DATA_FILE__;
+
+    async function loadData() {
+      try {
+        const resp = await fetch('/static/uploads/' + dataFile);
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const text = await resp.text();
+        // 提取 window.__KG_DATA__ = {...};
+        const match = text.match(/window\.__KG_DATA__\s*=\s*([\s\S]*?);\s*$/);
+        if (match) {
+          window.__KG_DATA__ = JSON.parse(match[1]);
+          console.log('[Reader] 数据加载成功, 实体数:', Object.keys(window.__KG_DATA__).length);
+          // 触发 DOMContentLoaded 逻辑
+          document.dispatchEvent(new Event('DOMContentLoaded'));
+        } else {
+          throw new Error('数据格式错误');
+        }
+      } catch (e) {
+        console.error('[Reader] 数据加载失败:', e);
+        document.getElementById('markmap-container').innerHTML =
+          '<div class="empty-state"><span class="icon">⚠️</span><p>数据加载失败: ' + e.message + '</p></div>';
+      }
+    }
+
+    if (dataFile) {
+      loadData();
+    } else {
+      // 无数据文件时，尝试使用已有的全局数据
+      document.addEventListener('DOMContentLoaded', () => {
+        if (!window.__KG_DATA__) {
+          document.getElementById('markmap-container').innerHTML =
+            '<div class="empty-state"><span class="icon">📂</span><p>未找到实体数据，请先上传书籍</p></div>';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

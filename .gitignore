@@ -1,0 +1,92 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+kg_book_tool.egg-info/
+
+# 虚拟环境
+venv/
+.venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# 项目特定
+logs/
+*.log
+_test_*.py
+_test_*.json
+_test_*.js
+_test_*.md
+_test_*.txt
+_test_*.png
+
+# 上传文件 + 生成的数据（运行时产物，不入库）
+kg_app/static/uploads/*
+!kg_app/static/uploads/.gitkeep
+kg_app/static/data/*.json
+kg_app/static/data/*.js
+
+# 大文件（用户上传的电子书籍）
+*.pdf
+*.epub
+*.docx
+*.pptx
+*.xlsx
+*.zip
+*.tar.gz
+
+# 临时数据
+*.bak
+*.tmp
+.cache/
+
+# 第三方库（已 pip install，不需要入库）
+ltp/
+
+# 旧版代码（已被 kg_core 替代）
+archive/
+build_v6.py
+gen_summaries_v6.py
+kg.py
+refine_definitions_v6.py
+validate_v6.py
+kg_build_v7_md.py
+
+# 旧版数据
+kg_entity_v6.json
+kg_entity_v7.json
+kg_entity_v7.js
+kg_app_v6.js
+kg_style_v6.css
+kg_v7.css
+kg_v7.html
+kg_v7.js
+kg_book_clean.txt
+kg_book_full.md
+kg_book_full.mmd
+kg_book_full.txt
+kg_book_interactive_v6.html
+kg_book_sections.txt
+kg_book_toc.txt
+
+# 第三方 JS 库（CDN 引入即可）
+lib/
+
+# 打包 spec（PyInstaller 旧版）
+*.spec
