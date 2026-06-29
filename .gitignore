@@ -11,6 +11,7 @@ dist/
 .coverage
 htmlcov/
 kg_book_tool.egg-info/
+_verify/
 
 # 虚拟环境
 venv/
